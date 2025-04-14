@@ -7,11 +7,13 @@ export function TodoFilter({ filterBy, onSetFilterBy }) {
     useEffect(() => {
         // Notify parent
         onSetFilterBy(filterByToEdit)
+        console.log(filterByToEdit)
     }, [filterByToEdit])
 
     function handleChange({ target }) {
         const field = target.name
         let value = target.value
+        
 
         switch (target.type) {
             case 'number':
@@ -47,6 +49,11 @@ export function TodoFilter({ filterBy, onSetFilterBy }) {
                 <input value={importance} onChange={handleChange}
                     type="number" placeholder="By Importance" id="importance" name="importance"
                 />
+                <select name="isDone" id="isDone" onChange={handleChange}>
+                    <option value="">All</option>
+                    <option value={false}>Active</option>
+                    <option value={true}>Done</option>
+                </select>
 
                 <button hidden>Set Filter</button>
             </form>

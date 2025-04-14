@@ -28,6 +28,14 @@ function query(filterBy = {}) {
             if (filterBy.importance) {
                 todos = todos.filter(todo => todo.importance >= filterBy.importance)
             }
+            if (filterBy.isDone) {
+                if (filterBy.isDone === 'false') {
+                    todos = todos.filter(todo => todo.isDone ===false)
+                }
+                if (filterBy.isDone === 'true') {
+                    todos = todos.filter(todo => todo.isDone === true)
+                }
+            }
 
             return todos
         })
