@@ -39,6 +39,7 @@ function signup({ username, password, fullname }) {
         fullname,
         balance: 10000,
         activities: [],
+        pref: getDefaultPrefs()
     }
     user.createdAt = user.updatedAt = Date.now()
 
@@ -56,7 +57,7 @@ function getLoggedinUser() {
 }
 
 function _setLoggedinUser(user) {
-    const userToSave = { _id: user._id, fullname: user.fullname, balance: user.balance }
+    const userToSave = { _id: user._id, fullname: user.fullname, balance: user.balance, pref: user.pref }
     sessionStorage.setItem(STORAGE_KEY_LOGGEDIN, JSON.stringify(userToSave))
     return userToSave
 }
@@ -67,6 +68,9 @@ function getEmptyCredentials() {
         username: 'muki',
         password: 'muki1',
     }
+}
+function getDefaultPrefs() {
+    return { color: '#eeeeee', bgColor: "#191919", fullname: '' }
 }
 
 function updateBalance(diff) {
@@ -81,8 +85,21 @@ function updateBalance(diff) {
                     return user
                 })
         })
+}
 
-
+function updatePref(userToUpdate) {
+    const loggedInUser = getLoggedinUser()
+    if (!loggedInUser) return
+    return getById(loggedInUser._id)
+        .then(user => {
+            user = { ...user, ...userToUpdate }
+            return storageService.put(STORAGE_KEY, user)
+                .then(user => {
+                    _setLoggedinUser(user)
+                    return user
+                })
+        })
+}
 }
 // signup({username: 'muki', password: 'muki1', fullname: 'Muki Ja'})
 // login({username: 'muki', password: 'muki1'})

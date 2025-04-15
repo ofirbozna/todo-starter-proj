@@ -46,3 +46,16 @@ export function changeBalance(diff){
         throw err
     })
 }
+
+export function updatePrefs(user) {
+    return userService.updatePref(user)
+        .then(user => {
+            store.dispatch({ type: SET_USER, user })
+            return user.pref
+        })
+        .catch(err => {
+            console.error('Cannot change balance:', err)
+            throw err
+        })
+}
+
