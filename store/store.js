@@ -49,6 +49,7 @@ function appReducer(state = initialState, cmd = {}) {
                 ...state,
                 loggedInUser: cmd.user
             }
+
         default:
             return state
     }

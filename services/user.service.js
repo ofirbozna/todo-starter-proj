@@ -1,3 +1,4 @@
+
 import { storageService } from "./async-storage.service.js"
 
 
@@ -8,7 +9,8 @@ export const userService = {
     signup,
     getById,
     query,
-    getEmptyCredentials
+    getEmptyCredentials,
+    updateBalance
 }
 const STORAGE_KEY_LOGGEDIN = 'user'
 const STORAGE_KEY = 'userDB'
@@ -31,7 +33,13 @@ function login({ username, password }) {
 }
 
 function signup({ username, password, fullname }) {
-    const user = { username, password, fullname }
+    const user = {
+        username,
+        password,
+        fullname,
+        balance: 10000,
+        activities: [],
+    }
     user.createdAt = user.updatedAt = Date.now()
 
     return storageService.post(STORAGE_KEY, user)
@@ -48,7 +56,7 @@ function getLoggedinUser() {
 }
 
 function _setLoggedinUser(user) {
-    const userToSave = { _id: user._id, fullname: user.fullname }
+    const userToSave = { _id: user._id, fullname: user.fullname, balance: user.balance }
     sessionStorage.setItem(STORAGE_KEY_LOGGEDIN, JSON.stringify(userToSave))
     return userToSave
 }
@@ -61,6 +69,21 @@ function getEmptyCredentials() {
     }
 }
 
+function updateBalance(diff) {
+    const loggedInUser = getLoggedinUser()
+    if (!loggedInUser) return
+    return getById(loggedInUser._id)
+        .then(user => {
+            user.balance += diff
+            return storageService.put(STORAGE_KEY, user)
+                .then(user => {
+                    _setLoggedinUser(user)
+                    return user
+                })
+        })
+
+
+}
 // signup({username: 'muki', password: 'muki1', fullname: 'Muki Ja'})
 // login({username: 'muki', password: 'muki1'})
 

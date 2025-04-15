@@ -1,3 +1,4 @@
+// import { use } from "react";
 import { userService  } from "../../services/user.service.js";
 import {store, SET_USER} from "../store.js"
 
@@ -30,6 +31,18 @@ export function logout(){
     })
     .catch(err => {
         console.log('user actions -> Cannot logout', err)
+        throw err
+    })
+}
+
+export function changeBalance(diff){
+    return userService.updateBalance(diff)
+    .then(user => {
+        store.dispatch({ type: SET_USER, user })
+        return user.balance
+    })
+    .catch(err => {
+        console.error('Cannot change balance:', err)
         throw err
     })
 }

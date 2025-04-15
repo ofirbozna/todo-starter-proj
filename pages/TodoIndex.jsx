@@ -4,6 +4,7 @@ import { DataTable } from "../cmps/data-table/DataTable.jsx"
 import { todoService } from "../services/todo.service.js"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
 import { loadTodos, removeTodo, saveTodo } from "../store/actions/todo.actions.js"
+import { changeBalance } from "../store/actions/user.actions.js"
 
 const { useState, useEffect } = React
 const { Link, useSearchParams } = ReactRouterDOM
@@ -44,6 +45,9 @@ export function TodoIndex() {
         saveTodo(todoToSave)
             .then((savedTodo) => {
                 showSuccessMsg(`Todo is ${(savedTodo.isDone) ? 'done' : 'back on your list'}`)
+                if (todoToSave.isDone) {
+                    return changeBalance(10)
+                }
             })
             .catch(err => {
                 console.log('err:', err)
