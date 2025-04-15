@@ -10,7 +10,9 @@ export const userService = {
     getById,
     query,
     getEmptyCredentials,
-    updateBalance
+    updateBalance,
+    updatePref,
+    updateActivities
 }
 const STORAGE_KEY_LOGGEDIN = 'user'
 const STORAGE_KEY = 'userDB'
@@ -100,6 +102,27 @@ function updatePref(userToUpdate) {
                 })
         })
 }
+
+
+function updateActivities(activity) {
+    const activityToAdd = {
+        txt: activity,
+        at: Date.now()
+    }
+    const loggedInUser = getLoggedinUser()
+    if (!loggedInUser) return
+    return getById(loggedInUser._id)
+        .then(user => {
+            user.activities.unshift(activityToAdd)
+            return user
+        })
+        .then(user=> {
+            return storageService.put(STORAGE_KEY, user)
+                .then(user => {
+                    _setLoggedinUser(user)
+                    return user
+                })
+        })
 }
 // signup({username: 'muki', password: 'muki1', fullname: 'Muki Ja'})
 // login({username: 'muki', password: 'muki1'})

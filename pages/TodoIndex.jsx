@@ -4,7 +4,7 @@ import { DataTable } from "../cmps/data-table/DataTable.jsx"
 import { todoService } from "../services/todo.service.js"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
 import { loadTodos, removeTodo, saveTodo } from "../store/actions/todo.actions.js"
-import { changeBalance } from "../store/actions/user.actions.js"
+import { changeBalance, updateUserActivities } from "../store/actions/user.actions.js"
 
 const { useState, useEffect } = React
 const { Link, useSearchParams } = ReactRouterDOM
@@ -32,9 +32,10 @@ export function TodoIndex() {
         const confirmRemove = confirm('Are you sure you want to remove this todo?')
         if (!confirmRemove) return
         removeTodo(todoId)
-            .then(() =>
+            .then(() => {
+                updateUserActivities(`Removed todo ${todoId} id`)
                 showSuccessMsg(`Removed todo with ${todoId} id successfully`)
-            )
+            })
             .catch(err => {
                 showErrorMsg('Cannot remove todo ' + todoId)
             })
@@ -43,18 +44,21 @@ export function TodoIndex() {
     function onToggleTodo(todo) {
         const todoToSave = { ...todo, isDone: !todo.isDone }
         saveTodo(todoToSave)
-            .then((savedTodo) => {
-                showSuccessMsg(`Todo is ${(savedTodo.isDone) ? 'done' : 'back on your list'}`)
-                if (todoToSave.isDone) {
-                    return changeBalance(10)
-                }
-            })
-            .catch(err => {
-                console.log('err:', err)
-                showErrorMsg('Cannot toggle todo ' + todoId)
-            })
+        .then((savedTodo) => {
+            console.log(savedTodo._id)
+            updateUserActivities(`change todo ${todoToSave.txt} isDone to ${todoToSave.isDone} `)
+            showSuccessMsg(`Todo is ${(savedTodo.isDone) ? 'done' : 'back on your list'}`)
+            if (todoToSave.isDone) {
+                return changeBalance(10)
+            }
+        })
+        .catch(err => {
+            console.log('err:', err)
+            showErrorMsg('Cannot toggle todo ' + todoId)
+        })
     }
-
+    
+    if(!todos) return <h2>No todos to show</h2>
     return (
         <section className="todo-index">
             <TodoFilter filterBy={filterBy} onSetFilterBy={setFilterBy} />

@@ -1,50 +1,50 @@
 // import { use } from "react";
-import { userService  } from "../../services/user.service.js";
-import {store, SET_USER} from "../store.js"
+import { userService } from "../../services/user.service.js";
+import { store, SET_USER } from "../store.js"
 
-export function login(credentials){
+export function login(credentials) {
     return userService.login(credentials)
-    .then(user => {
-        store.dispatch({ type: SET_USER, user })
-    })
-    .catch(err => {
-        console.log('user actions -> Cannot login', err)
-        throw err
-    })
+        .then(user => {
+            store.dispatch({ type: SET_USER, user })
+        })
+        .catch(err => {
+            console.log('user actions -> Cannot login', err)
+            throw err
+        })
 }
 
-export function signup(credentials){
+export function signup(credentials) {
     return userService.signup(credentials)
-    .then(user => {
-        store.dispatch({ type: SET_USER, user })
-    })
-    .catch(err => {
-        console.log('user actions -> Cannot signup', err)
-        throw err
-    })
+        .then(user => {
+            store.dispatch({ type: SET_USER, user })
+        })
+        .catch(err => {
+            console.log('user actions -> Cannot signup', err)
+            throw err
+        })
 }
 
-export function logout(){
+export function logout() {
     return userService.logout()
-    .then(user => {
-        store.dispatch({ type: SET_USER, user })
-    })
-    .catch(err => {
-        console.log('user actions -> Cannot logout', err)
-        throw err
-    })
+        .then(user => {
+            store.dispatch({ type: SET_USER, user })
+        })
+        .catch(err => {
+            console.log('user actions -> Cannot logout', err)
+            throw err
+        })
 }
 
-export function changeBalance(diff){
+export function changeBalance(diff) {
     return userService.updateBalance(diff)
-    .then(user => {
-        store.dispatch({ type: SET_USER, user })
-        return user.balance
-    })
-    .catch(err => {
-        console.error('Cannot change balance:', err)
-        throw err
-    })
+        .then(user => {
+            store.dispatch({ type: SET_USER, user })
+            return user.balance
+        })
+        .catch(err => {
+            console.error('Cannot change balance:', err)
+            throw err
+        })
 }
 
 export function updatePrefs(user) {
@@ -59,3 +59,15 @@ export function updatePrefs(user) {
         })
 }
 
+export function updateUserActivities(activity) {
+    console.log('in')
+    return userService.updateActivities(activity)
+        .then(user => {
+            store.dispatch({ type: SET_USER, user })
+            return user.activities
+        })
+        .catch(err => {
+            console.error('Cannot change balance:', err)
+            throw err
+        })
+}
