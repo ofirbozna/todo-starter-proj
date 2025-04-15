@@ -1,4 +1,4 @@
-const { useState } = React
+const { useState, useEffect } = React
 const { Link, NavLink } = ReactRouterDOM
 const { useNavigate } = ReactRouter
 const { useSelector, useDispatch } = ReactRedux
@@ -11,8 +11,11 @@ import { logout } from '../store/actions/user.actions.js'
 
 export function AppHeader() {
     const navigate = useNavigate()
+    const todos = useSelector(storeState => storeState.todos)
     const user = useSelector(storeState => storeState.loggedInUser)
-  
+    // const [doneTodos, setDoneTodos] = useState(null)
+    const doneTodos = todos.filter(todo => todo.isDone === true)
+
     function onLogout() {
         logout()
             .catch((err) => {
@@ -23,6 +26,12 @@ export function AppHeader() {
     function onSetUser(user) {
         setUser(user)
         navigate('/')
+    }
+
+    function countDoneTodos() {
+        const doneTodosToSave = todos.filter(todo => todo.isDone === true)
+        console.log(todos)
+        setDoneTodos(doneTodosToSave)
     }
     return (
         <header className="app-header full main-layout">
@@ -46,6 +55,7 @@ export function AppHeader() {
                     <NavLink to="/dashboard" >Dashboard</NavLink>
                 </nav>
             </section>
+            {todos.length > 0 && <progress className='todos-progress' value={doneTodos.length} max={todos.length}></progress>}
             <UserMsg />
         </header>
     )

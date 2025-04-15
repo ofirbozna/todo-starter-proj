@@ -26,9 +26,29 @@ a.active {
     text-decoration: underline;
 }
 
+.todos-progress{
+    width: 200px;
+    height: 15px;
+    border-radius: 30px;
+    margin-block-end: 0.5rem;
+}
+
+/* הרקע */
+progress::-webkit-progress-bar {
+    background-color: #eee;
+    border-radius: 10px;
+}
+
+/* החלק שמתקדם */
+progress::-webkit-progress-value {
+    background-color: #8da78e; /* ירוק */
+    border-radius: 10px;
+}
 
 @media (max-width: 720px) {
     .app-header {
         color: var(--clr2bg-light);
     }
 }
+
+
