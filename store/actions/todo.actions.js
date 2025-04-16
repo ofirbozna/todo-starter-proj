@@ -5,7 +5,6 @@ export function loadTodos(filterBy) {
     store.dispatch({ type: SET_IS_LOADING, isLoading:true})
     return todoService.query(filterBy)
         .then(todos => {
-            console.log(todos)
             store.dispatch({ type: SET_TODOS, todos})
         })
         .catch(err => {

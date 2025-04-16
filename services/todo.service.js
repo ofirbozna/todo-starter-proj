@@ -2,6 +2,7 @@ import { utilService } from './util.service.js'
 import { storageService } from './async-storage.service.js'
 
 const TODO_KEY = 'todoDB'
+export const  PAGE_SIZE = 5
 _createTodos()
 
 export const todoService = {
@@ -30,10 +31,22 @@ function query(filterBy = {}) {
             }
             if (filterBy.isDone) {
                 if (filterBy.isDone === 'false') {
-                    todos = todos.filter(todo => todo.isDone ===false)
+                    todos = todos.filter(todo => todo.isDone === false)
                 }
                 if (filterBy.isDone === 'true') {
                     todos = todos.filter(todo => todo.isDone === true)
+                }
+            }
+            if (filterBy.pageIdx !== undefined && filterBy.pageIdx !== '' && filterBy.pageIdx !== null) {
+                const startIdx = filterBy.pageIdx * PAGE_SIZE
+                todos = todos.slice(startIdx, startIdx + PAGE_SIZE)
+            }
+            if (filterBy.sortBy) {
+                if (filterBy.sortBy === 'txt') {
+                    todos.sort((todo1, todo2) => todo1.txt.localeCompare(todo2.txt))
+                }
+                if (filterBy.sortBy === 'importance') {
+                    todos.sort((todo1, todo2) => todo1.importance - todo2.importance)
                 }
             }
 
@@ -70,14 +83,16 @@ function getEmptyTodo(txt = '', importance = 5) {
 }
 
 function getDefaultFilter() {
-    return { txt: '', importance: 0 }
+    return { txt: '', importance: 0 ,isDone :'',sortBy: 'importance', pageIdx:0 }
 }
 
 function getFilterFromSearchParams(searchParams) {
-    const defaultFilter = getDefaultFilter()
-    const filterBy = {}
-    for (const field in defaultFilter) {
-        filterBy[field] = searchParams.get(field) || ''
+    const filterBy = {
+        txt: searchParams.get('txt') || '',
+        isDone: searchParams.get('isDone') || 'all',
+        importance: +searchParams.get('importance') || 0,
+        pageIdx: +searchParams.get('pageIdx') || 0,
+        sort: searchParams.get('sortBy') || 'importance'
     }
     return filterBy
 }
@@ -110,7 +125,7 @@ function _createTodo(txt, importance) {
     const todo = getEmptyTodo(txt, importance)
     todo._id = utilService.makeId()
     todo.createdAt = todo.updatedAt = Date.now() - utilService.getRandomIntInclusive(0, 1000 * 60 * 60 * 24)
-    todo.color =  "#99a695"
+    todo.color = "#99a695"
     return todo
 }
 

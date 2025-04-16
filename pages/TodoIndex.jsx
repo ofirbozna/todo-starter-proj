@@ -44,21 +44,26 @@ export function TodoIndex() {
     function onToggleTodo(todo) {
         const todoToSave = { ...todo, isDone: !todo.isDone }
         saveTodo(todoToSave)
-        .then((savedTodo) => {
-            console.log(savedTodo._id)
-            updateUserActivities(`change todo ${todoToSave.txt} isDone to ${todoToSave.isDone} `)
-            showSuccessMsg(`Todo is ${(savedTodo.isDone) ? 'done' : 'back on your list'}`)
-            if (todoToSave.isDone) {
-                return changeBalance(10)
-            }
-        })
-        .catch(err => {
-            console.log('err:', err)
-            showErrorMsg('Cannot toggle todo ' + todoId)
-        })
+            .then((savedTodo) => {
+                console.log(savedTodo._id)
+                updateUserActivities(`change todo ${todoToSave.txt} isDone to ${todoToSave.isDone} `)
+                showSuccessMsg(`Todo is ${(savedTodo.isDone) ? 'done' : 'back on your list'}`)
+                if (todoToSave.isDone) {
+                    return changeBalance(10)
+                }
+            })
+            .catch(err => {
+                console.log('err:', err)
+                showErrorMsg('Cannot toggle todo ' + todoId)
+            })
     }
-    
-    if(!todos) return <h2>No todos to show</h2>
+
+    function onSetPage(diff) {
+        if (filterBy.pageIdx + diff < 0) return
+        setFilterBy(prevFilter => ({ ...prevFilter, pageIdx: +prevFilter.pageIdx + diff }))
+    }
+
+    if (!todos) return <h2>No todos to show</h2>
     return (
         <section className="todo-index">
             <TodoFilter filterBy={filterBy} onSetFilterBy={setFilterBy} />
@@ -68,6 +73,9 @@ export function TodoIndex() {
             {isLoading ? <div>Loading...</div> :
                 <section>
                     <h2>Todos List</h2>
+                    <button onClick={() => onSetPage(-1)}>Prev Page</button>
+                    <span>{filterBy.pageIdx+1}</span>
+                    <button onClick={() => onSetPage(1)}>Next Page</button>
                     <TodoList todos={todos} onRemoveTodo={onRemoveTodo} onToggleTodo={onToggleTodo} />
                     <hr />
                     <h2>Todos Table</h2>

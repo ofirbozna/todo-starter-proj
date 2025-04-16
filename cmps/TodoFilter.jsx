@@ -1,19 +1,21 @@
-const { useState, useEffect } = React
+const { useState, useEffect, useRef } = React
+
+import { utilService } from "../services/util.service.js"
 
 export function TodoFilter({ filterBy, onSetFilterBy }) {
 
-    const [filterByToEdit, setFilterByToEdit] = useState({...filterBy})
+    const [filterByToEdit, setFilterByToEdit] = useState({ ...filterBy })
+    const debouncedSetFilterRef = useRef(utilService.debounce(onSetFilterBy, 500))
 
     useEffect(() => {
         // Notify parent
-        onSetFilterBy(filterByToEdit)
-        console.log(filterByToEdit)
+        debouncedSetFilterRef.current(filterByToEdit)
     }, [filterByToEdit])
 
     function handleChange({ target }) {
         const field = target.name
         let value = target.value
-        
+        console.log(value)
 
         switch (target.type) {
             case 'number':
@@ -53,6 +55,12 @@ export function TodoFilter({ filterBy, onSetFilterBy }) {
                     <option value="">All</option>
                     <option value={false}>Active</option>
                     <option value={true}>Done</option>
+                </select>
+
+                <select name="sortBy" id="sortBy" onChange={handleChange}>
+                    <option value="">sort</option>
+                    <option value="importance">Importance</option>
+                    <option value="txt">Todo name</option>
                 </select>
 
                 <button hidden>Set Filter</button>

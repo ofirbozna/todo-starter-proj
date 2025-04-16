@@ -5,7 +5,8 @@ export const utilService = {
     loadFromStorage,
     saveToStorage,
     animateCSS,
-    getRandomColor
+    getRandomColor,
+    debounce
 }
 
 function makeId(length = 6) {
@@ -69,3 +70,15 @@ function getRandomColor() {
     }
     return color;
 }
+
+
+function debounce(func, wait) {
+    let timeout;
+
+    return function executedFunction(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            func(...args)
+        }, wait);
+    };
+};
