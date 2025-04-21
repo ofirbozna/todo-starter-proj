@@ -15,7 +15,7 @@ import {AppHeader} from "../cmps/AppHeader.jsx"
 
 export function App() {
 
-    const user = useSelector(storState => storState.loggedInUser)
+    const user = useSelector(storState => storState.userModule.loggedInUser)
     
     return <section className="app main-layout" style={{ color: user.pref.color, backgroundColor: user.pref.bgColor }}>
         <AppHeader />

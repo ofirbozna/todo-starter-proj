@@ -11,8 +11,8 @@ import { logout } from '../store/actions/user.actions.js'
 
 export function AppHeader() {
     const navigate = useNavigate()
-    const todos = useSelector(storeState => storeState.todos)
-    const user = useSelector(storeState => storeState.loggedInUser)
+    const todos = useSelector(storeState => storeState.todoModule.todos)
+    const user = useSelector(storeState => storeState.userModule.loggedInUser)
     // const [doneTodos, setDoneTodos] = useState(null)
     const doneTodos = todos.filter(todo => todo.isDone === true)
 
@@ -28,11 +28,6 @@ export function AppHeader() {
         navigate('/')
     }
 
-    function countDoneTodos() {
-        const doneTodosToSave = todos.filter(todo => todo.isDone === true)
-        console.log(todos)
-        setDoneTodos(doneTodosToSave)
-    }
     return (
         <header className="app-header full main-layout">
             <section className="header-container">

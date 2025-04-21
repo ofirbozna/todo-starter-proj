@@ -4,8 +4,8 @@ import { updatePrefs } from "../store/actions/user.actions.js"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
 export function UserDetails() {
     const [userDetails, setUserDetails] = useState(null)
-    const user = useSelector(storState => storState.loggedInUser)
-    console.log(user)
+    const user = useSelector(storState => storState.userModule.loggedInUser)
+
 
     useEffect(() => {
         if (user) getUserData()

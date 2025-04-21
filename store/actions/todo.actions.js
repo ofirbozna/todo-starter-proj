@@ -1,10 +1,13 @@
 import {todoService} from "../../services/todo.service.js"
-import { SET_TODOS,REMOVE_TODO,ADD_TODO,UPDATE_TODO, SET_IS_LOADING, store } from "../store.js";
+import { store } from "../store.js";
+import { SET_IS_LOADING } from "../reducers/user.reducer.js";
+import { SET_TODOS,REMOVE_TODO,ADD_TODO,UPDATE_TODO} from "../reducers/todo.reducer.js"
 
 export function loadTodos(filterBy) {
     store.dispatch({ type: SET_IS_LOADING, isLoading:true})
     return todoService.query(filterBy)
         .then(todos => {
+
             store.dispatch({ type: SET_TODOS, todos})
         })
         .catch(err => {

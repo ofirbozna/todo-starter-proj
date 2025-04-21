@@ -1,6 +1,7 @@
 // import { use } from "react";
 import { userService } from "../../services/user.service.js";
-import { store, SET_USER } from "../store.js"
+import { store } from "../store.js"
+import { SET_USER} from '../reducers/user.reducer.js'
 
 export function login(credentials) {
     return userService.login(credentials)
@@ -60,7 +61,6 @@ export function updatePrefs(user) {
 }
 
 export function updateUserActivities(activity) {
-    console.log('in')
     return userService.updateActivities(activity)
         .then(user => {
             store.dispatch({ type: SET_USER, user })

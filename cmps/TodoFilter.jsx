@@ -15,7 +15,6 @@ export function TodoFilter({ filterBy, onSetFilterBy }) {
     function handleChange({ target }) {
         const field = target.name
         let value = target.value
-        console.log(value)
 
         switch (target.type) {
             case 'number':
